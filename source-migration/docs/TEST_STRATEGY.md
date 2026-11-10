@@ -1,0 +1,16 @@
+# PC test strategy
+
+Tests are tied to observed requirements; the only engineering-quality cases are request-boundary checks required for the new local server.
+
+| Test ID | Type | Scenario | Why needed | Evidence / requirement | Expected result | Implemented |
+|---|---|---|---|---|---|---|
+| UT-001 | Unit | Validate valid image data URLs; reject malformed, missing and empty image inputs. | Protects both selected inputs before generation. | `src_ev_wardrobeai_image_loading_001`, `src_ev_wardrobeai_validation_001`; FR-001, FR-003. | Valid encoded image is accepted; invalid input raises typed validation error. | Yes |
+| IT-001 | Integration | Start the local HTTP server; fetch the home page and health endpoint. | Confirms app is runnable and reports local/Gemini mode. | PC stack decision; NFR-001, FR-004. | Home page returns 200; absent key yields `gemini_available: false`. | Yes |
+| IT-002 | Integration | Submit valid images without a Gemini key. | Original source includes an offline fallback. | `ev_6563e4ebbe1d21ccf2c19af9a2988fda875f93f3adb0a0a270af097e43d57b51`; FR-004. | API requests local composite mode and does not call the network. | Yes |
+| IT-003 | Unit/integration | Mock Gemini response with text plus image; assert prompt, two image parts, modality config, model order and image extraction. | Checks the integration contract without sending user data or using credentials. | `ev_8d16e59edeaee7e4c236258caa6cc017f8a08fd57f605e9e14240b5ccc64f48a`; `src_ev_wardrobeai_gemini_integration_001`; FR-004. | Returns encoded image from the first candidate. | Yes |
+| UT-002 | Unit | Mock all Gemini attempts returning text only. | Verifies fallback exhaustion when there is no image. | `src_ev_wardrobeai_gemini_integration_001`; FR-004, FR-005. | Each source-listed model is attempted once, then generator returns no remote image so caller uses local composite. | Yes |
+| IT-004 | Integration | Submit malformed image to `/api/try-on`. | API boundary must reject invalid images predictably. | PC engineering choice; NFR-005, FR-008. | HTTP 400 with a readable error. | Yes |
+| UI-001 | Manual UI check | Select/replace/remove both images, generate without key, download, then try another outfit. | Covers visible end-to-end behavior and person-preserving reset. | `ev_800e433fe197e1dad1cc8935d1900f225199762680ad1048180c0f59ec13048`, `ev_41b3e42bc5e6e88ced8b006527e11da8fa7e14e565227fc86e900b585b5f7f95`, `ev_874298afd9a618836e6e01c8ac485566bc6333710a5faede01aa008daa2ea964`; FR-001, FR-006, FR-007. | Result downloads as PNG; repeat view retains person and clears garment/result. | No automated browser driver configured. |
+| E2E-001 | Manual/service-dependent | Configure a private Gemini key and create a remote result; verify network and text-only/error fallback. | Confirms behavior requiring external credentials/service. | `src_ev_wardrobeai_gemini_integration_001`; FR-004. | First supported image response is previewed; all failures use local overlay. | Not run; credentials/service access not part of this analysis. |
+
+Automated tests live in `tests/test_server.py`; run `python3 -m unittest discover -s tests -v` from the `source-migration` directory. No live Gemini request is made in these tests.

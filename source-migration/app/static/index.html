@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f8fafc">
+    <title>WardrobeAI — Virtual Try-On</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="/" aria-label="WardrobeAI home"><span class="brand-mark">W</span> WardrobeAI</a>
+        <span class="local-badge"><span class="status-dot"></span> Runs on this PC</span>
+      </header>
+
+      <section id="workflow" class="workflow" aria-labelledby="page-title">
+        <div class="intro">
+          <p class="eyebrow">YOUR PERSONAL STYLING STUDIO</p>
+          <h1 id="page-title">A new look, <span>made yours.</span></h1>
+          <p class="intro-copy">Add your photo and a piece from your wardrobe to preview the outfit.</p>
+        </div>
+
+        <div class="upload-grid">
+          <article class="upload-card" aria-labelledby="person-title">
+            <div class="card-heading"><span class="step">01</span><div><h2 id="person-title">Your photo</h2><p>Full or upper body works best</p></div></div>
+            <input id="person-input" class="file-input" type="file" accept="image/*">
+            <div id="person-drop" class="drop-zone" tabindex="0" role="button" aria-label="Choose your photo">
+              <img id="person-preview" alt="Your selected photo" hidden>
+              <div id="person-empty" class="empty-state"><span class="upload-icon" aria-hidden="true">＋</span><strong>Choose your photo</strong><span>JPG, PNG, or WebP</span></div>
+              <div id="person-actions" class="image-actions" hidden><span id="person-name" class="file-name"></span><button id="person-replace" class="quiet-button" type="button">Replace</button><button id="person-remove" class="quiet-button remove-button" type="button">Remove</button></div>
+            </div>
+          </article>
+
+          <div class="flow-connector" aria-hidden="true"><span>↓</span></div>
+
+          <article class="upload-card" aria-labelledby="garment-title">
+            <div class="card-heading"><span class="step">02</span><div><h2 id="garment-title">The outfit</h2><p>T-shirt, shirt, jacket, hoodie, or dress</p></div></div>
+            <input id="garment-input" class="file-input" type="file" accept="image/*">
+            <div id="garment-drop" class="drop-zone" tabindex="0" role="button" aria-label="Choose a clothing image">
+              <img id="garment-preview" alt="Selected clothing" hidden>
+              <div id="garment-empty" class="empty-state"><span class="upload-icon hanger" aria-hidden="true">◇</span><strong>Choose a clothing image</strong><span>JPG, PNG, or WebP</span></div>
+              <div id="garment-actions" class="image-actions" hidden><span id="garment-name" class="file-name"></span><button id="garment-replace" class="quiet-button" type="button">Replace</button><button id="garment-remove" class="quiet-button remove-button" type="button">Remove</button></div>
+            </div>
+          </article>
+        </div>
+
+        <div class="generate-wrap">
+          <button id="generate" class="primary-button" type="button"><span>Try on this look</span><span aria-hidden="true">✦</span></button>
+          <p id="mode-hint" class="mode-hint">Preparing your local try-on studio…</p>
+        </div>
+        <p id="message" class="message" role="alert" aria-live="polite"></p>
+      </section>
+
+      <section id="result" class="result" aria-labelledby="result-title" hidden>
+        <div class="intro result-intro">
+          <p class="eyebrow success-eyebrow">YOUR LOOK IS READY</p>
+          <h1 id="result-title">The <span>new you.</span></h1>
+          <p class="intro-copy">Your virtual try-on preview is ready to save.</p>
+        </div>
+        <div class="result-frame"><img id="result-image" alt="Virtual try-on result"></div>
+        <div class="result-actions">
+          <a id="download" class="primary-button download-button" download="WardrobeAI_try-on.png">↓ &nbsp; Download image</a>
+          <button id="another" class="secondary-button" type="button">↻ &nbsp; Try another outfit</button>
+        </div>
+        <p id="result-message" class="result-message" role="status" aria-live="polite"></p>
+      </section>
+      <footer>WARDROBEAI <span>•</span> A LITTLE MORE YOU, EVERY DAY</footer>
+    </main>
+  </body>
+</html>
